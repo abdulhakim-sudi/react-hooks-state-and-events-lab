@@ -1,20 +1,58 @@
-import React from "react";
-import ShoppingList from "./ShoppingList";
-import itemData from "../data/items";
+import React, { useState } from "react";
+import "./App.css";
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-  // replace 'false' with a state variable that can be toggled between true and false
-  // this will be used for the Dark Mode Toggle feature
-  const appClass = false ? "App dark" : "App light"
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const foodItems = [
+    { id: 1, name: "Sushi", category: "Main" },
+    { id: 2, name: "Ramen", category: "Main" },
+    { id: 3, name: "Tempura", category: "Appetizer" },
+    { id: 4, name: "Edamame", category: "Appetizer" },
+    { id: 5, name: "Matcha Ice Cream", category: "Dessert" }
+  ];
+
+  const filteredItems = selectedCategory
+    ? foodItems.filter(item => item.category === selectedCategory)
+    : foodItems;
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+  };
 
   return (
-    <div className={appClass}>
-      <header>
-        <h2>Shopster</h2>
-        <button>Dark Mode</button>
-      </header>
-      <ShoppingList items={itemData} />
+    <div className={`App ${darkMode ? "dark" : "light"}`}>
+      <h1>Japanese Food Menu</h1>
+
+      {/* Dark Mode Label and Button */}
+      <p>
+        Dark Mode:{" "}
+        <button onClick={toggleDarkMode}>
+          {darkMode ? "ON" : "OFF"}
+        </button>
+      </p>
+
+      {/* Category Filter */}
+      <select onChange={handleCategoryChange} value={selectedCategory}>
+        <option value="">All Categories</option>
+        <option value="Main">Main</option>
+        <option value="Appetizer">Appetizer</option>
+        <option value="Dessert">Dessert</option>
+      </select>
+
+      {/* Food List */}
+      <ul>
+        {filteredItems.map((item) => (
+          <li key={item.id}>
+            {item.name} - {item.category}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
